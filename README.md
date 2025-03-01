@@ -1,92 +1,50 @@
-# MultiModal Sign Language Learning App
+# Welcome to your Expo app 👋
 
-A mobile application built with React Native (Expo) and Python backend for learning sign language through video analysis and real-time feedback.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Project Structure
+## Get started
 
-The project consists of two main parts:
-- `muliModal/` - React Native (Expo) frontend application
-- `server/` - Python backend server for video processing and motion analysis
+1. Install dependencies
 
-## Features
+   ```bash
+   npm install
+   ```
 
-- Video recording and playback
-- Real-time motion analysis
-- Sign language learning interface
-- Audio visualization
-- Acceleration data visualization
+2. Start the app
 
-## Setup Instructions
+   ```bash
+    npx expo start
+   ```
 
-### Frontend (React Native)
+In the output, you'll find options to open the app in a
 
-1. Navigate to the muliModal directory:
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
 ```bash
-cd muliModal
+npm run reset-project
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-3. Start the Expo development server:
-```bash
-npx expo start
-```
+## Learn more
 
-### Backend (Python)
+To learn more about developing your project with Expo, look at the following resources:
 
-1. Navigate to the server directory:
-```bash
-cd server
-```
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-2. Install Python dependencies:
-```bash
-pip install -r requirements.txt
-```
+## Join the community
 
-3. Start the server:
-```bash
-python server.py
-```
+Join our community of developers creating universal apps.
 
-## Tech Stack
-
-### Frontend
-- React Native (Expo)
-- TypeScript
-- Expo AV for video handling
-- React Native components for visualization
-
-### Backend
-- Python
-- FastAPI
-- OpenCV for video processing
-- Motion analysis algorithms
-
-## Project Structure
-
-```
-├── muliModal/              # Frontend React Native application
-│   ├── app/               # App screens and navigation
-│   ├── components/        # Reusable React components
-│   └── types/            # TypeScript type definitions
-├── server/                # Backend Python server
-│   ├── videos/           # Video storage
-│   ├── motion_analyzer.py # Motion analysis logic
-│   └── server.py         # FastAPI server
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
