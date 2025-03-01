@@ -3,7 +3,7 @@ const ENV = {
     apiUrl: 'http://localhost:3000',
   },
   production: {
-    apiUrl: 'https://your-production-server.com', // Replace with your actual production server URL
+    apiUrl: 'https://icas-asl-backend-e5703a4c3200.herokuapp.com', // Replace with your actual production server URL
   },
 };
 
@@ -12,7 +12,7 @@ const getEnvVars = () => {
   const isProduction = process.env.NODE_ENV === 'production';
   
   // Return the appropriate environment variables
-  return isProduction ? ENV.production : ENV.development;
+  return ENV.production;
 };
 
 export default getEnvVars; 

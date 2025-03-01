@@ -10,7 +10,7 @@ import getEnvVars from '../../config/environment';
 const { apiUrl } = getEnvVars();
 
 const SIGN_WORDS = [
-  'garbage',
+  'laptop',
 ];
 
 export default function HomePage() {
@@ -377,7 +377,7 @@ export default function HomePage() {
         >
           <Text style={styles.settingsButtonText}>⚙️</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>MuliModal Recorder</Text>
+        <Text style={styles.title}>ASL Datacollector</Text>
         <View style={styles.userSection}>
           <View style={styles.userInfo}>
             <Text style={styles.usernameText}>{username}</Text>
