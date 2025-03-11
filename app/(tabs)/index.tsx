@@ -10,7 +10,7 @@ import getEnvVars from '../../config/environment';
 const { apiUrl } = getEnvVars();
 
 const SIGN_WORDS = [
-  'laptop',
+  'coffee',
 ];
 
 export default function HomePage() {
