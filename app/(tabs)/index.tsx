@@ -10,7 +10,12 @@ import getEnvVars from '../../config/environment';
 const { apiUrl } = getEnvVars();
 
 const SIGN_WORDS = [
-  'coffee',
+  'beer',
+  'brown',
+  'Name',
+  'Weight',
+  'Favorite',
+  'Hamburger'
 ];
 
 export default function HomePage() {
@@ -128,9 +133,11 @@ export default function HomePage() {
   };
 
   const toggleCamera = (value: boolean) => {
+    console.log('Toggle camera called with value:', value);
     if (permission?.granted) {
       setIsCameraEnabled(value);
     } else {
+      console.log('Camera permission not granted');
       alert('Camera permission not granted');
     }
   };
@@ -167,9 +174,14 @@ export default function HomePage() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('username');
-    setUsername('');
-    router.replace('/sign-in');
+    console.log('Sign out clicked');
+    try {
+      localStorage.removeItem('username');
+      setUsername('');
+      router.replace('/sign-in');
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    }
   };
 
   const handleWordSelect = async (word: string) => {

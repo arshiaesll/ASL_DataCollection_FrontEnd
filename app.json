@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "muliModal",
-    "slug": "muliModal",
+    "name": "multimodal",
+    "slug": "multimodal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,6 +20,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
+      "publicPath": "/ASL_DataCollection_FrontEnd/",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -35,7 +36,12 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "baseUrl": "/ASL_DataCollection_FrontEnd"
+    },
+    "extra": {
+      "router": {
+        "type": "hash"
+      }
     }
   }
 }
