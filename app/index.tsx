@@ -1,11 +1,14 @@
 import { StyleSheet, View, Text, Switch, Pressable, TouchableOpacity, Platform, TextInput, Animated } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { useState, useEffect, useRef } from 'react';
-import { VideoRecorder, VideoQuality, FileType } from '../../components/VideoRecorder';
-import { RecordingOptions, RecordingInterval } from '../../components/RecordingOptions';
-import { VideoPlayer } from '../../components/VideoPlayer';
+import { VideoRecorder, VideoQuality, FileType } from './components/VideoRecorder';
+import { RecordingOptions, RecordingInterval } from './components/RecordingOptions';
+import { VideoPlayer } from './components/VideoPlayer';
+import { SettingsOverlay } from './components/SettingsOverlay';
+import { CountdownOverlay } from './components/CountdownOverlay';
+import { Header } from './components/Header';
 import { router } from 'expo-router';
-import getEnvVars from '../../config/environment';
+import getEnvVars from '../config/environment';
 
 const { apiUrl } = getEnvVars();
 
@@ -48,6 +51,11 @@ export default function HomePage() {
     (async () => {
       if (!permission?.granted) {
         const status = await requestPermission();
+        console.log('Camera permission status:', status);
+        if (status.granted) {
+          setIsCameraEnabled(true);
+          setKey(prevKey => prevKey + 1);
+        }
       }
     })();
   }, [permission, requestPermission]);
@@ -125,12 +133,6 @@ export default function HomePage() {
     const randomWord = SIGN_WORDS[Math.floor(Math.random() * SIGN_WORDS.length)];
     handleWordSelect(randomWord);
   }, []);
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const toggleCamera = (value: boolean) => {
     console.log('Toggle camera called with value:', value);
@@ -305,119 +307,17 @@ export default function HomePage() {
     ]).start();
   };
 
-  const SettingsOverlay = () => (
-    <View style={[styles.settingsOverlay, !showSettings && styles.hidden]}>
-      <View style={styles.settingGroup}>
-        <Text style={styles.settingLabel}>Recording Duration:</Text>
-        <View style={styles.optionsRow}>
-          {(['5s', '10s', '30s', '1m', '∞'] as RecordingInterval[]).map((interval) => (
-            <TouchableOpacity
-              key={interval}
-              style={[styles.option, recordingInterval === interval && styles.selectedOption]}
-              onPress={() => setRecordingInterval(interval)}
-              disabled={isRecording}
-            >
-              <Text style={[styles.optionText, recordingInterval === interval && styles.selectedOptionText]}>
-                {interval}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.settingGroup}>
-        <Text style={styles.settingLabel}>Video Quality:</Text>
-        <View style={styles.optionsRow}>
-          {(['2160p', '1080p', '720p', '480p', '360p'] as VideoQuality[]).map((q) => (
-            <TouchableOpacity
-              key={q}
-              style={[styles.option, quality === q && styles.selectedOption]}
-              onPress={() => setQuality(q)}
-              disabled={isRecording}
-            >
-              <Text style={[styles.optionText, quality === q && styles.selectedOptionText]}>{q}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.settingGroup}>
-        <Text style={styles.settingLabel}>File Type:</Text>
-        <View style={styles.optionsRow}>
-          {(Platform.OS === 'web' ? ['webm'] : ['mp4', 'mov']).map((type) => (
-            <TouchableOpacity
-              key={type}
-              style={[styles.option, fileType === type && styles.selectedOption]}
-              onPress={() => setFileType(type as FileType)}
-              disabled={isRecording}
-            >
-              <Text style={[styles.optionText, fileType === type && styles.selectedOptionText]}>{type}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
-    </View>
-  );
-
-  const CountdownOverlay = () => {
-    if (!isRecording) return null;
-
-    const timeDisplay = formatTime(elapsedTime);
-    const remainingDisplay = maxDuration ? 
-      ` / ${formatTime(maxDuration)}` : 
-      ' / ∞';
-
-    return (
-      <View style={styles.countdownOverlay}>
-        <View style={styles.countdownContent}>
-          <Text style={styles.recordingIndicator}>🔴 Recording</Text>
-          <Text style={styles.countdownText}>
-            {timeDisplay}{remainingDisplay}
-          </Text>
-        </View>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.settingsButton} 
-          onPress={() => setShowSettings(!showSettings)}
-          disabled={isRecording}
-        >
-          <Text style={styles.settingsButtonText}>⚙️</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>ASL Datacollector</Text>
-        <View style={styles.userSection}>
-          <View style={styles.userInfo}>
-            <Text style={styles.usernameText}>{username}</Text>
-            <Animated.Text 
-              style={[
-                styles.userCountText,
-                { 
-                  transform: [
-                    { scale: countAnimation },
-                    { translateX: Animated.multiply(countAnimation, -10) }
-                  ],
-                  fontSize: 14,
-                  fontWeight: 'bold',
-                  color: '#4CAF50'
-                }
-              ]}
-            >
-              {userCount} videos
-            </Animated.Text>
-          </View>
-          <TouchableOpacity 
-            style={styles.signOutButton} 
-            onPress={handleSignOut}
-          >
-            <Text style={styles.signOutButtonText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Header 
+        username={username}
+        userCount={userCount}
+        showSettings={showSettings}
+        setShowSettings={setShowSettings}
+        isRecording={isRecording}
+        onSignOut={handleSignOut}
+        countAnimation={countAnimation}
+      />
 
       <View style={styles.currentWordContainer}>
         <Text style={styles.currentWordText}>{signLabel || "Loading..."}</Text>
@@ -445,6 +345,7 @@ export default function HomePage() {
               </View>
             ) : (
               <VideoRecorder
+                key={key}
                 recordingInterval={recordingInterval}
                 isRecording={isRecording}
                 onRecordingComplete={handleRecordingComplete}
@@ -509,8 +410,21 @@ export default function HomePage() {
           </View>
         )}
       </View>
-      <SettingsOverlay />
-      <CountdownOverlay />
+      <SettingsOverlay 
+        showSettings={showSettings}
+        recordingInterval={recordingInterval}
+        setRecordingInterval={setRecordingInterval}
+        quality={quality}
+        setQuality={setQuality}
+        fileType={fileType}
+        setFileType={setFileType}
+        isRecording={isRecording}
+      />
+      <CountdownOverlay 
+        isRecording={isRecording}
+        elapsedTime={elapsedTime}
+        maxDuration={maxDuration}
+      />
     </View>
   );
 }
@@ -520,18 +434,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-  title: {
-    flex: 1,
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   contentContainer: {
     flex: 1,
@@ -615,87 +517,6 @@ const styles = StyleSheet.create({
     opacity: 1,
     transform: [{ scale: 1.1 }],
   },
-  settingsButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderRadius: 20,
-    padding: 10,
-    marginRight: 10,
-  },
-  settingsButtonText: {
-    fontSize: 20,
-  },
-  settingsOverlay: {
-    position: 'absolute',
-    bottom: 100,
-    left: 20,
-    right: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    borderRadius: 10,
-    padding: 15,
-    zIndex: 1,
-  },
-  hidden: {
-    display: 'none',
-  },
-  settingGroup: {
-    marginBottom: 15,
-  },
-  settingLabel: {
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 8,
-    fontWeight: '600',
-  },
-  optionsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  option: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  selectedOption: {
-    backgroundColor: '#81b0ff',
-    borderColor: '#fff',
-  },
-  optionText: {
-    color: 'white',
-    fontSize: 14,
-  },
-  selectedOptionText: {
-    fontWeight: '600',
-  },
-  countdownOverlay: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    zIndex: 2,
-  },
-  countdownContent: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  recordingIndicator: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  countdownText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
-    fontFamily: 'monospace',
-  },
   rightContainer: {
     flex: 1,
     gap: 10,
@@ -725,34 +546,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#f44336',
-  },
-  signOutButton: {
-    backgroundColor: '#ff4444',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  signOutButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  userSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  userInfo: {
-    alignItems: 'flex-end',
-    minWidth: 120,
-  },
-  usernameText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
-  },
-  userCountText: {
-    fontSize: 12,
-    color: '#666',
   },
   reviewButtonsContainer: {
     flexDirection: 'row',
