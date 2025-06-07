@@ -10,6 +10,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "dev": "npx expo start",
     "lint": "expo lint",
     "build": "npx expo export --platform web",
     "predeploy": "npm run build",

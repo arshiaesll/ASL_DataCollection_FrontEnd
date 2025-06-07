@@ -24,13 +24,13 @@ interface VideoRecorderProps {
   fileType: FileType;
 }
 
-export function VideoRecorder({ 
+export const VideoRecorder = ({ 
   recordingInterval, 
   isRecording: parentIsRecording, 
   onRecordingComplete,
   quality,
   fileType,
-}: VideoRecorderProps) {
+}: VideoRecorderProps) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<any>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
