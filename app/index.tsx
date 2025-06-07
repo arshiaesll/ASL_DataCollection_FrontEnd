@@ -6,7 +6,6 @@ import {
   Pressable,
   TouchableOpacity,
   Platform,
-  TextInput,
   Animated,
 } from "react-native";
 import { useCameraPermissions } from "expo-camera";
@@ -30,8 +29,7 @@ import getEnvVars from "../config/environment";
 const { apiUrl } = getEnvVars();
 
 const SIGN_WORDS = [
-  // "laptop",
-  "beer",
+  "laptop",
   "brown",
   "Name",
   "Weight",
@@ -175,10 +173,6 @@ export default function HomePage() {
     }
   };
 
-  const handleIntervalSelect = (interval: RecordingInterval) => {
-    setRecordingInterval(interval);
-  };
-
   const handleRecordingComplete = async (uri: string, duration: number) => {
     setIsRecording(false);
     setTempRecordedVideo(uri);
@@ -303,7 +297,7 @@ export default function HomePage() {
             status: "success",
           });
           setUserCount((prev) => prev + 1);
-          animateCount();
+          // animateCount();
           // Select a new random word after successful upload
           const randomWord =
             SIGN_WORDS[Math.floor(Math.random() * SIGN_WORDS.length)];
@@ -324,23 +318,35 @@ export default function HomePage() {
     }
   };
 
-  const animateCount = () => {
-    countAnimation.setValue(1);
-    Animated.sequence([
-      Animated.spring(countAnimation, {
-        toValue: 2.2,
-        friction: 4,
-        tension: 20,
-        useNativeDriver: true,
-      }),
-      Animated.spring(countAnimation, {
-        toValue: 1,
-        friction: 8,
-        tension: 80,
-        useNativeDriver: true,
-      }),
-    ]).start();
+  const handlePreviousWord = () => {
+    const currentIndex = SIGN_WORDS.indexOf(signLabel);
+    const newIndex = (currentIndex - 1 + SIGN_WORDS.length) % SIGN_WORDS.length;
+    handleWordSelect(SIGN_WORDS[newIndex]);
   };
+
+  const handleNextWord = () => {
+    const currentIndex = SIGN_WORDS.indexOf(signLabel);
+    const newIndex = (currentIndex + 1) % SIGN_WORDS.length;
+    handleWordSelect(SIGN_WORDS[newIndex]);
+  };
+
+  // const animateCount = () => {
+  //   countAnimation.setValue(1);
+  //   Animated.sequence([
+  //     Animated.spring(countAnimation, {
+  //       toValue: 2.2,
+  //       friction: 4,
+  //       tension: 20,
+  //       useNativeDriver: true,
+  //     }),
+  //     Animated.spring(countAnimation, {
+  //       toValue: 1,
+  //       friction: 8,
+  //       tension: 80,
+  //       useNativeDriver: true,
+  //     }),
+  //   ]).start();
+  // };
 
   return (
     <View style={styles.container}>
@@ -354,10 +360,24 @@ export default function HomePage() {
         countAnimation={countAnimation}
       />
 
-      <View style={styles.currentWordContainer}>
+      {/* <View style={styles.currentWordContainer}>
         <Text style={styles.currentWordText}>{signLabel || "Loading..."}</Text>
-      </View>
+      </View> */}
+      <View style={styles.wordSelectorContainer}>
+        <TouchableOpacity onPress={handlePreviousWord}>
+          <Text style={styles.arrow}>←</Text>
+        </TouchableOpacity>
 
+        <View style={styles.currentWordContainer}>
+          <Text style={styles.currentWordText}>
+            {signLabel || "Loading..."}
+          </Text>
+        </View>
+
+        <TouchableOpacity onPress={handleNextWord}>
+          <Text style={styles.arrow}>→</Text>
+        </TouchableOpacity>
+      </View>
       {searchStatus.status !== "none" && (
         <Text
           style={[
@@ -609,4 +629,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
   },
+  wordSelectorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between", // or 'center' with margin
+  },
+
+  arrow: {
+    fontSize: 32,
+    paddingHorizontal: 16,
+  },
+
+  // currentWordContainer: {
+  //   paddingHorizontal: 12,
+  // },
+
+  // currentWordText: {
+  //   fontSize: 24,
+  //   fontWeight: "bold",
+  // },
 });

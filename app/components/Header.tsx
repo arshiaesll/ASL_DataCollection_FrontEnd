@@ -1,4 +1,10 @@
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from "react-native";
 
 interface HeaderProps {
   username: string;
@@ -21,8 +27,8 @@ export const Header = ({
 }: HeaderProps) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity 
-        style={styles.settingsButton} 
+      <TouchableOpacity
+        style={styles.settingsButton}
         onPress={() => setShowSettings(!showSettings)}
         disabled={isRecording}
       >
@@ -32,27 +38,24 @@ export const Header = ({
       <View style={styles.userSection}>
         <View style={styles.userInfo}>
           <Text style={styles.usernameText}>{username}</Text>
-          <Animated.Text 
+          <Animated.Text
             style={[
               styles.userCountText,
-              { 
+              {
                 transform: [
                   { scale: countAnimation },
-                  { translateX: Animated.multiply(countAnimation, -10) }
+                  { translateX: Animated.multiply(countAnimation, -10) },
                 ],
                 fontSize: 14,
-                fontWeight: 'bold',
-                color: '#4CAF50'
-              }
+                fontWeight: "bold",
+                color: "#4CAF50",
+              },
             ]}
           >
             {userCount} videos
           </Animated.Text>
         </View>
-        <TouchableOpacity 
-          style={styles.signOutButton} 
-          onPress={onSignOut}
-        >
+        <TouchableOpacity style={styles.signOutButton} onPress={onSignOut}>
           <Text style={styles.signOutButtonText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
@@ -62,19 +65,19 @@ export const Header = ({
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
     paddingHorizontal: 10,
   },
   title: {
     flex: 1,
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   settingsButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 20,
     padding: 10,
     marginRight: 10,
@@ -83,31 +86,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   userSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 10,
   },
   userInfo: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     minWidth: 120,
   },
   usernameText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    fontWeight: "600",
+    color: "#666",
   },
   userCountText: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
   },
   signOutButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: "#ff4444",
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 8,
   },
   signOutButtonText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
   },
-}); 
+});
