@@ -29,12 +29,14 @@ import getEnvVars from "../config/environment";
 const { apiUrl } = getEnvVars();
 
 const SIGN_WORDS = [
-  "laptop",
-  "brown",
+  "Tuesday",
+  "Bathroom",
   "Name",
   "Weight",
+  "Brown",
   "Favorite",
   "Hamburger",
+  "Marriage",
 ];
 
 export default function HomePage() {
